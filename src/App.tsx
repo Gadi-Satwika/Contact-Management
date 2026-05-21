@@ -11,6 +11,8 @@ import type { Contact } from './types/contact';
 const DashboardWorkspace: React.FC = () => {
   const { contacts, addContact, updateContact, deleteContact } = useContacts();
 
+    const [isActionLoading, setIsActionLoading] = useState(false);
+
   // Search/Filter states
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'All' | 'Active' | 'Inactive'>('All');
@@ -58,18 +60,28 @@ const DashboardWorkspace: React.FC = () => {
 
   // State mutation executions
   const handleSaveContact = (formData: Omit<Contact, 'id' | 'createdDate'>) => {
-    if (selectedContact) {
-      updateContact(selectedContact.id, formData);
-    } else {
-      addContact(formData);
-    }
+    setIsActionLoading(true);
+    
+    // Simulate a high-speed 600ms API roundtrip database save
+    setTimeout(() => {
+      if (selectedContact) {
+        updateContact(selectedContact.id, formData);
+      } else {
+        addContact(formData);
+      }
+      setIsActionLoading(false);
+    }, 600);
   };
 
   const handleConfirmDelete = () => {
     if (targetDeleteId) {
-      deleteContact(targetDeleteId);
-      setIsDeleteOpen(false);
-      setTargetDeleteId(null);
+      setIsActionLoading(true);
+      setTimeout(() => {
+        deleteContact(targetDeleteId);
+        setIsDeleteOpen(false);
+        setTargetDeleteId(null);
+        setIsActionLoading(false);
+      }, 500);
     }
   };
 
@@ -137,6 +149,17 @@ const DashboardWorkspace: React.FC = () => {
       </footer>
     </div>
   );
+
+  {/* Global Action Processing Loader Overlay */}
+  {isActionLoading && (
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-900/20 backdrop-blur-xs animate-fade-in">
+      <div className="bg-white p-5 rounded-xl shadow-lg border border-slate-100 flex items-center gap-4">
+        {/* Sleek CSS Spinner */}
+        <div className="h-6 w-6 rounded-full border-3 border-emerald-100 border-t-emerald-600 animate-spin"></div>
+        <span className="text-sm font-semibold text-slate-700 tracking-wide">Updating Directory...</span>
+      </div>
+    </div>
+  )}
 };
 
 const App: React.FC = () => {

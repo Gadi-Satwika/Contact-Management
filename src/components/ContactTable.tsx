@@ -95,11 +95,15 @@ export const ContactTable: React.FC<ContactTableProps> = ({ contacts, onView, on
                 <h4 className="font-semibold text-slate-900">{contact.firstName} {contact.lastName}</h4>
                 <p className="text-xs text-slate-500">{contact.companyName}</p>
               </div>
-              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                contact.status === 'Active' ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-600'
-              }`}>
-                {contact.status}
-              </span>
+              // Inside ContactTable status badge cell
+                <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${
+                    contact.status === 'Active' 
+                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+                        : 'bg-slate-100 text-slate-600 border border-slate-200'
+                    }`}>
+                    {contact.status === 'Active' && <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>}
+                    {contact.status}
+                </span>
             </div>
             
             <div className="text-xs space-y-1 text-slate-500">
